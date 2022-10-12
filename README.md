@@ -9,7 +9,7 @@ smoldot is here. https://github.com/paritytech/smoldot<br>
 4. only tested with ws (not wss).<br>
 5. only tested wth ip4.<br>
 6. only tested wth single stream.<br>
-7. testing nodes are polkadot with rococo_local_testnet chainspec file.
+7. testing nodes are polkadot with rococo-local-testnet.json chainspec file.
 
 <h3>current issues</h3><br>
 1. (almost) no "finalized" events are received while watching extrinsics. <br>
