@@ -14,6 +14,6 @@ smoldot is here. https://github.com/paritytech/smoldot<br>
 1. (almost) no "finalized" events are received while watching extrinsics. <br>
 2. smoldot says "invalid transaction" because "bad proof" after 5-10 minutes after launching.<br>
 3. no "bloadcast" happens when all local nodes are written as bootnode in chain-spec.<br>
-4. (launching two local node, write both as bootnode to chain-spec)<br>
-5. samething happens when save database content locally, and relaunch with the data.<br>
-6. smoldot continues to try connecting to node that is already shutdowned.<br>
+(launching two local node, write both as bootnode to chain-spec)<br>
+4. samething happens when save database content locally, and relaunch with the data.<br>
+5. smoldot continues to try connecting to node that is already shutdowned.<br>
