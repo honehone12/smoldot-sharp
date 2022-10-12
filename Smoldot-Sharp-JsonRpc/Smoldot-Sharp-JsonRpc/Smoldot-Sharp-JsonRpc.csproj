@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Smoldot_Sharp_JSON</RootNamespace>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="libs\sr25519-dotnet.lib.dll" />
+    <None Remove="libs\sr25519crust.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blake2Core" Version="1.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
+    <PackageReference Include="SimpleBase" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SCALE-Sharp-Light\SCALE-Sharp-Light\SCALE-Sharp-Light.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="sr25519-dotnet.lib">
+      <HintPath>libs\sr25519-dotnet.lib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="libs\sr25519-dotnet.lib.dll" />
+    <Resource Include="libs\sr25519crust.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>

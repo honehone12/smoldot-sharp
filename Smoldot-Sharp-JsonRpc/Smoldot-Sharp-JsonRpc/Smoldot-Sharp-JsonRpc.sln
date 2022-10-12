@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smoldot-Sharp-JsonRpc", "Smoldot-Sharp-JsonRpc.csproj", "{FBB14C63-7460-4ADF-B11E-C1FF6650960A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCALE-Sharp-Light", "..\..\SCALE-Sharp-Light\SCALE-Sharp-Light\SCALE-Sharp-Light.csproj", "{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleRpcClient", "..\ExampleRpcClient\ExampleRpcClient.csproj", "{E48FF15A-4DC4-467E-9093-BFDF08ED2406}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smoldot-Sharp-JsonRpc-Test", "..\Smoldot-Sharp-JsonRpc-Test\Smoldot-Sharp-JsonRpc-Test.csproj", "{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Debug|x64.ActiveCfg = Debug|x64
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Debug|x64.Build.0 = Debug|x64
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Release|x64.ActiveCfg = Release|x64
+		{FBB14C63-7460-4ADF-B11E-C1FF6650960A}.Release|x64.Build.0 = Release|x64
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Debug|x64.ActiveCfg = Debug|x64
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Debug|x64.Build.0 = Debug|x64
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Release|x64.ActiveCfg = Release|x64
+		{61AEE9A3-1932-4BDE-86F9-C3C7F8467A24}.Release|x64.Build.0 = Release|x64
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Debug|x64.ActiveCfg = Debug|x64
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Debug|x64.Build.0 = Debug|x64
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Release|x64.ActiveCfg = Release|x64
+		{E48FF15A-4DC4-467E-9093-BFDF08ED2406}.Release|x64.Build.0 = Release|x64
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Debug|x64.ActiveCfg = Debug|x64
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Debug|x64.Build.0 = Debug|x64
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Release|x64.ActiveCfg = Release|x64
+		{E51EDD3C-25D2-4CF3-A1B2-239A4F49DF53}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {809A34BF-5B11-4348-9479-D96DEBBC2BF5}
+	EndGlobalSection
+EndGlobal

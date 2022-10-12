@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Smoldot_Sharp</RootNamespace>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x64</Platforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SCALE-Sharp-Light\SCALE-Sharp-Light\SCALE-Sharp-Light.csproj" />
+    <ProjectReference Include="..\..\Smoldot-Sharp-JsonRpc\Smoldot-Sharp-JsonRpc\Smoldot-Sharp-JsonRpc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WasmtimeFork2Build">
+      <HintPath>libs\WasmtimeFork2Build.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
