@@ -28,7 +28,7 @@ namespace SmoldotSharpExample
         // smoldot wasm path.
         const string WasmPath = "smoldot_light_wasm.wasm";
         // log level of smoldot wasm. NOT of c# codes.
-        const SmoldotLogLevel LogLevel = SmoldotLogLevel.Debug;
+        const SmoldotLogLevel LogLevel = SmoldotLogLevel.Trace;
         // cpu usage limit for wasm. range is 0.0 ~ 1.0.
         const double CpuRateLim = 1.0;
 
@@ -40,7 +40,7 @@ namespace SmoldotSharpExample
             var loop = true;
             var launcherConfig = new LauncherConfig(SpecSource,
                 StoreLocally, LocalFileExtension, LocalFileDir,
-                WasmPath, SmoldotLogLevel.Info, CpuRateLim);
+                WasmPath, LogLevel, CpuRateLim);
             var logger = new SmoldotDevLogger(LogLevel);
             var launcher = new SmoldotLauncher(logger, launcherConfig);
             
