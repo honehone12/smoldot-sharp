@@ -209,7 +209,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<short>();
+            l = Array.Empty<short>();
             numRead = -1;
             return false;
         }
@@ -313,7 +313,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<int>();
+            l = Array.Empty<int>();
             numRead = -1;
             return false;
         }
@@ -417,7 +417,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<long>();
+            l = Array.Empty<long>();
             numRead = -1;
             return false;
         }
@@ -521,7 +521,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<byte>();
+            l = Array.Empty<byte>();
             numRead = -1;
             return false;
         }
@@ -625,7 +625,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<ushort>();
+            l = Array.Empty<ushort>();
             numRead = -1;
             return false;
         }
@@ -729,7 +729,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<uint>();
+            l = Array.Empty<uint>();
             numRead = -1;
             return false;
         }
@@ -833,7 +833,7 @@ namespace ScaleSharpLight
                 return true;
             }
 
-            l = l = Array.Empty<ulong>(); ;
+            l = Array.Empty<ulong>(); ;
             numRead = -1;
             return false;
         }
