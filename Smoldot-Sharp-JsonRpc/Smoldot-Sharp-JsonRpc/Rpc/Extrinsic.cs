@@ -183,23 +183,26 @@ namespace SmoldotSharp.JsonRpc
         ExtrinsicV4(byte version, MultiAddress accountId, Signature signature, 
             byte[] miniExtensions, byte[] call)
         {
-            var sigLen = signature.signature.Length;
+            const int MaxStackAllocLen = 256;
+
+            var sig = signature.GetSignature;
+            var sigLen = sig.Length;
             var exLen = miniExtensions.Length;
             var callLen = call.Length;
             var totalLen = 1 + 1 + MultiAddress.Size + 1 + sigLen + exLen + callLen;
             var sizePfx = Compact.CompactInteger((uint)totalLen);
             totalLen += sizePfx.CompactEncodedSize();
-            var buff = totalLen >= 1024 ? 
+            var buff = totalLen >= MaxStackAllocLen ? 
                 new Span<byte>(new byte[totalLen]) : stackalloc byte[totalLen];
             var pos = 0;
 
             pos += sizePfx.CompactEncode(buff);
             buff[pos++] = (byte)(version | 0b1000_0000); // signed only
             buff[pos++] = accountId.multiAddrPrefix; 
-            accountId.AccountIdAsSpan.CopyTo(buff[pos..]);
+            accountId.GetAccountId.CopyTo(buff[pos..]);
             pos += MultiAddress.Size;
             buff[pos++] = signature.keyType; 
-            signature.signature.CopyTo(buff[pos..]);
+            sig.CopyTo(buff[pos..]);
             pos += sigLen;
             miniExtensions.CopyTo(buff[pos..]);
             pos += exLen;
@@ -208,7 +211,7 @@ namespace SmoldotSharp.JsonRpc
             Debug.Assert(pos == totalLen);
 
             var totalCharLen = 2 + totalLen * 2;
-            var charBuff = totalCharLen >= 1024 ?
+            var charBuff = totalCharLen >= MaxStackAllocLen ?
                 new Span<char>(new char[totalCharLen]) : stackalloc char[totalCharLen];
             buff.BytesToHex(charBuff.Put0X(), out var w);
             Debug.Assert(w == totalCharLen - 2);
@@ -236,9 +239,8 @@ namespace SmoldotSharp.JsonRpc
                 var config = new Blake2BConfig { OutputSizeInBits = 256 };
                 payload = Blake2B.ComputeHash(payload, config);
             }
-
-            var signer = Signer.New;
-            var sig = signer.Sign(payload, key);
+;
+            var sig = Signer.Sign(payload, key);
             return new ExtrinsicV4(call.version, multiAddress, sig, miniEx, callAsBytes);
         }
     }

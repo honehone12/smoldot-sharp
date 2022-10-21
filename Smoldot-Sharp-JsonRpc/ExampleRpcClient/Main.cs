@@ -10,7 +10,6 @@ namespace SimpleRpcClient
         const string AliceUri = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY";
         const string BobUri =   "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty";
 
-
         static async Task Main()
         {
             using var client = new SimpleClient();
@@ -59,7 +58,7 @@ namespace SimpleRpcClient
             var dataBuff = new Span<byte>(data);
             var pos = 0;
             dataBuff[pos++] = dest.multiAddrPrefix;
-            dest.AccountIdAsSpan.CopyTo(dataBuff[pos..]);
+            dest.GetAccountId.CopyTo(dataBuff[pos..]);
             pos += MultiAddress.Size;
             pos += value.CompactEncode(dataBuff[pos..]);
             Debug.Assert(pos == data.Length);
@@ -69,8 +68,8 @@ namespace SimpleRpcClient
         static ExtrinsicV4 MakeExtrinsic(Hash genesisHash, Hash blockHash, RuntimeVersion rtVer, 
             uint nonce, ulong finalized)
         {
-            var ok = AliceUri.AsSpan().TrySS58Decode(out var alicePubKey, out var code);
-            Debug.Assert(code == 42);
+            var ok = AliceUri.AsSpan().TrySS58Decode(out var alicePubKey, out var ident);
+            Debug.Assert(ident == 42);
             Debug.Assert(ok);
 
             (ok, var alice) = MultiAddress.New(alicePubKey.ToArray());

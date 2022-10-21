@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using sr25519_dotnet.lib;
 using sr25519_dotnet.lib.Models;
 
 namespace SmoldotSharp.JsonRpc
 {
-    using SignerImpl = Sr25519DotNetLibSigner;
-
     public abstract class Key
     {
-        // Empty because of independence from SignerImpl.
+        public const int PublicKeySize = 32;
+        public const int PrivateKeySize = 64;
+        public const int SeedSize = 32;
+
+        public abstract SR25519Keypair GetSR25519Keypair { get; }
     }
 
     public class KeySeed : Key
     {
-        public const int SeedSize = 32;
         public const string Alice = "e5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a";
 
         readonly string seed;
@@ -24,6 +23,9 @@ namespace SmoldotSharp.JsonRpc
         {
             this.seed = seed;
         }
+
+        public override SR25519Keypair GetSR25519Keypair
+            => SR25519.GenerateKeypairFromSeed(seed);
 
         public static (bool, KeySeed) New(string seed)
         {
@@ -34,15 +36,10 @@ namespace SmoldotSharp.JsonRpc
 
             return (true, new KeySeed(seed));
         }
-
-        public ReadOnlySpan<char> GetSeed => seed.AsSpan();
     }
 
     public class KeyPair : Key
     {
-        public const int PublicKeySize = 32;
-        public const int PrivateKeySize = 64;
-
         readonly byte[] publicKey;
         readonly byte[] privateKey;
 
@@ -52,52 +49,37 @@ namespace SmoldotSharp.JsonRpc
             this.privateKey = privateKey;
         }
 
-        public static (bool, KeyPair) New(byte[] publickey, byte[] privateKey)
+        public override SR25519Keypair GetSR25519Keypair
+            => new SR25519Keypair(publicKey, privateKey);
+
+        public static (bool, KeyPair) New(byte[] publicKey, byte[] privateKey)
         {
-            if (publickey.Length == PublicKeySize 
+            if (publicKey.Length == PublicKeySize 
                 && privateKey.Length == PrivateKeySize)
             {
-                return (true, new KeyPair(publickey, privateKey));
+                return (true, new KeyPair(publicKey, privateKey));
             }
 
             return (false, new KeyPair(Array.Empty<byte>(), Array.Empty<byte>()));
         }
-
-        public ReadOnlyCollection<byte> GetPublicKey => Array.AsReadOnly(publicKey);
-
-        public ReadOnlyCollection<byte> GetPrivateKey => Array.AsReadOnly(privateKey);
     }
 
-    public abstract class Signer
+    public static class Signer
     {
-        public abstract Signature Sign<TKey>(byte[] message, TKey key) where TKey : Key;
-
-        public static Signer New => new SignerImpl();
-    }
-
-    class Sr25519DotNetLibSigner : Signer
-    {
-        public override Signature Sign<TKey>(byte[] message, TKey key)
+        public static Signature Sign<TKey>(byte[] message, TKey key)
+            where TKey : Key
         {
-            switch (key)
-            {
-                case KeySeed ks:
-                    var srks = SR25519.GenerateKeypairFromSeed(ks.GetSeed.ToString());
-                    return new Signature(SR25519.Sign(message, srks));
-                case KeyPair kp:
-                    var srkp = new SR25519Keypair(
-                        kp.GetPublicKey.ToArray(), kp.GetPrivateKey.ToArray());
-                    return new Signature(SR25519.Sign(message, srkp));
-                default:
-                    throw new UnexpectedDataException();
-            }
+            var kp = key.GetSR25519Keypair;
+            return new Signature(SR25519.Sign(message, kp));
         }
     }
 
     public class Signature
     {
         public readonly byte keyType = 0x01; // sr mode 
-        public readonly byte[] signature;
+        readonly byte[] signature;
+
+        public ReadOnlySpan<byte> GetSignature => signature;
 
         public Signature(byte[] signature)
         {

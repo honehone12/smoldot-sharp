@@ -76,7 +76,7 @@ namespace SmoldotSharp
                 && runtimeVersionTable.ContainsKey(chainId));
 
             var ok = signedRpc.senderUri.AsSpan().
-                TrySS58Decode(out var publicKey, out var chainCode);
+                TrySS58Decode(out var publicKey, out var ident);
             // should have chain code check here.
             Debug.Assert(ok);
             if (!ok)

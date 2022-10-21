@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using SmoldotSharp.Msgs;
 using SmoldotSharp.JsonRpc;
-using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace SmoldotSharp

@@ -77,9 +77,7 @@ namespace SmoldotSharp.JsonRpc
             this.accountId = accountId;
         }
 
-        public ReadOnlyCollection<byte> AccountId => new ReadOnlyCollection<byte>(accountId);
-
-        public ReadOnlySpan<byte> AccountIdAsSpan => accountId;
+        public ReadOnlySpan<byte> GetAccountId => accountId;
 
         public static (bool, MultiAddress) New(byte[] accountId)
         {
