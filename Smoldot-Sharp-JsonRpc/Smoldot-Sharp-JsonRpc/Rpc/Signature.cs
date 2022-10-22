@@ -50,7 +50,15 @@ namespace SmoldotSharp.JsonRpc
         }
 
         public override SR25519Keypair GetSR25519Keypair
-            => new SR25519Keypair(publicKey, privateKey);
+        {
+            get
+            {
+                var tmp = new byte[PrivateKeySize];
+                privateKey.CopyTo(tmp, 0);
+                FromEd25519PrivateKey(tmp);
+                return new SR25519Keypair(publicKey, tmp);
+            }
+        }
 
         public static (bool, KeyPair) New(byte[] publicKey, byte[] privateKey)
         {
@@ -61,6 +69,33 @@ namespace SmoldotSharp.JsonRpc
             }
 
             return (false, new KeyPair(Array.Empty<byte>(), Array.Empty<byte>()));
+        }
+
+        // belowes are from schnorkel.
+        // see https://github.com/w3f/schnorrkel
+
+        void FromEd25519PrivateKey(Span<byte> secretKey)
+        {
+            var key = secretKey[..32];
+            DivideScalarBytesByCofactor(key);
+            MakeScalar(key);
+        }
+
+        void DivideScalarBytesByCofactor(Span<byte> scalar)
+        {
+            byte low = 0;
+            for (int i = 31; i >= 0; i--)
+            {
+                byte r = (byte)(scalar[i] & 0b0000_0111);
+                scalar[i] >>= 3;
+                scalar[i] += low;
+                low = (byte)(r << 5);
+            }
+        }
+
+        void MakeScalar(Span<byte> bytes)
+        {
+            bytes[31] &= 0b0111_1111;
         }
     }
 
