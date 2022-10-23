@@ -26,4 +26,5 @@ smoldot is here. https://github.com/paritytech/smoldot<br>
 <h3>todo</h3>
 <ol>
 <li>update extrinsic process from JIT style to subscription style.</li>
+<li>my bad... I realized now (!!) this https://github.com/paritytech/smoldot/tree/main/bin/light-base is the repo for onother compile option...</li>
 </ol>
