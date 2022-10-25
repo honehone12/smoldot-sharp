@@ -15,5 +15,7 @@
         public const string DatabaseContent = "chainHead_unstable_finalizedDatabase";
         public const string TransactionSubmitAndWatch = "transaction_unstable_submitAndWatch";
         public const string GenesisHash = "chainHead_unstable_genesisHash";
+        public const string Follow = "chainHead_unstable_follow";
+        public const string Unpin = "chainHead_unstable_unpin";
     }
 }

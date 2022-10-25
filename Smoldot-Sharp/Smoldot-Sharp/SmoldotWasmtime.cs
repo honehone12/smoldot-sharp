@@ -25,7 +25,8 @@ namespace SmoldotSharp
         readonly TimerChannel timerQ;
         readonly (TimerChannel.Tx tx, TimerChannel.Rx rx) timerCh;
         readonly Thread smoldotThread;
-        
+        readonly Queue<Action> rpcResponseQueue = new Queue<Action>();
+
         SmoldotTransport? transport;
         SmoldotController? controller;
         Memory? memory;
@@ -141,6 +142,11 @@ namespace SmoldotSharp
 
                 transport.Update();
                 controller.Update();
+
+                while (rpcResponseQueue.TryDequeue(out var action))
+                {
+                    action.Invoke();
+                }
             }
 
             logger.Log(SmoldotLogLevel.Debug, "Smoldot thread is closed.");
@@ -455,22 +461,25 @@ namespace SmoldotSharp
             Debug.Assert(memory != null && controller != null
                 && JsonRpcResponsePeek != null && JsonRpcResponsePop != null);
 
-            while (true)
+            rpcResponseQueue.Enqueue(() =>
             {
-                var infoPtr = JsonRpcResponsePeek(chainId);
-                var ptr = memory.ReadInt32(infoPtr);
-                var len = memory.ReadInt32(infoPtr + 4);
-                if (len <= 0)
+                while (true)
                 {
-                    return;
-                }
+                    var infoPtr = JsonRpcResponsePeek.Invoke(chainId);
+                    var ptr = memory.ReadInt32(infoPtr);
+                    var len = memory.ReadInt32(infoPtr + 4);
+                    if (len <= 0)
+                    {
+                        break;
+                    }
 
-                var res = memory.ReadString(ptr, len);
-                Debug.Assert(chainTable.ContainsKey(chainId));
-                logger.Log(SmoldotLogLevel.Debug, $"[RPC-RESPONSE] id: {chainId}, res: {res}");
-                controller.OnJsonRpcRespond(chainId, chainTable[chainId].name, res);
-                JsonRpcResponsePop(chainId);
-            }
+                    var res = memory.ReadString(ptr, len);
+                    Debug.Assert(chainTable.ContainsKey(chainId));
+                    logger.Log(SmoldotLogLevel.Debug, $"[RPC-RESPONSE] id: {chainId}, res: {res}");
+                    controller.OnJsonRpcRespond(chainId, chainTable[chainId].name, res);
+                    JsonRpcResponsePop.Invoke(chainId);
+                }
+            });
         }
 
         void Log(int level, int targetPtr, int targetLen, int messagePtr, int messageLen)

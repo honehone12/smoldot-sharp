@@ -88,6 +88,11 @@ namespace SmoldotSharp.Msgs
 
     public class OnInitializedMsg : SmoldotMsg { }
 
+    public class InternalSubscriptionMsg : SubscriptionMsg
+    {
+        public InternalSubscriptionMsg() : base(0u, 0, string.Empty) { }
+    }
+
     public class OnSubscribeMsg : SubscriptionMsg
     {
         public OnSubscribeMsg(uint c, int i, string s) : base(c, i, s) { }

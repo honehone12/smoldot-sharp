@@ -23,7 +23,7 @@ namespace SmoldotSharp
 
         readonly Dictionary<uint, Action<BoxedObject>> resultCallbackTable
             = new Dictionary<uint, Action<BoxedObject>>();
-        
+        readonly Dictionary<int, (bool, uint)> followingTable = new Dictionary<int, (bool, uint)>();
         readonly ReadOnlyDictionary<int, (bool isRelayChain, string name)> chainTable;
 
         public SmoldotController(ISmoldotLogger logger, ControllerChannel control,
@@ -73,6 +73,13 @@ namespace SmoldotSharp
 
         public void OnChainAdded(int id, string name)
         {
+            // https://paritytech.github.io/json-rpc-interface-spec/api/chainHead_unstable_follow.html
+            // we want start subscription of following blocks here as new api seem to
+            // expect start subscription first.
+            // but it will stop soon because smoldot is busy for warp syncing now.
+            // for now calling old api is the handy way to ensure warp syncing is over.
+            // need to find nicer way in the future.
+
             // request genesis hash
             var reqIdGen = NextRequestId;
             var rpcGen = new Rpc<string>(RpcMethodNames.GenesisHash);
@@ -109,6 +116,21 @@ namespace SmoldotSharp
                 ok = Metadata.DecodeMetadata(raw);
                 Debug.Assert(ok);
                 control.tx.Enqueue(new OnChainAddedMsg(id, name));
+
+                // follow blocks
+                // this should be first.
+                var reqIdFol = NextRequestId;
+                // need to put this in some config
+                var getRuntimeUpdate = false;
+                var rpcFol = new Rpc<string, bool>(RpcMethodNames.Follow, getRuntimeUpdate);
+                SendJsonRpc(id, reqIdFol, rpcFol);
+                resultCallbackTable.Add(reqIdFol, (box) =>
+                {
+                    var (ok, subscId) = box.UnboxAsString();
+                    Debug.Assert(ok);
+                    var ctxId = ContextId.NextId;
+                    subscriptionTable.Add((id, subscId), ctxId);
+                });
             });
         }
 
@@ -122,12 +144,20 @@ namespace SmoldotSharp
             var (isSubsc, res) = IsSubscription(json);
             if (isSubsc)
             {
-                var msg = HandleSubscription(chainId, res, json);
-                control.tx.Enqueue(msg);
+                var (isNotInternal, msg) = HandleSubscription(chainId, res, json);
+                if (isNotInternal)
+                {
+                    control.tx.Enqueue(msg);
+                }
             }
             else
             {
                 var (ctx, box) = HandleResult(chainId, res, json);
+                if (box == null)
+                {
+                    ContextId.End(ctx);
+                    return;
+                }
                 if (resultCallbackTable.ContainsKey(res.id))
                 {
                     var ok = resultCallbackTable.Remove(res.id, out var callback);
@@ -252,7 +282,7 @@ namespace SmoldotSharp
             });
         }
 
-        SubscriptionMsg HandleSubscription(int chainId, ResponseFormat res, string json)
+        (bool, SubscriptionMsg) HandleSubscription(int chainId, ResponseFormat res, string json)
         {
             Debug.Assert(res.method != null);
             var notification = json.Deserialize<SubscriptionFormat>();
@@ -272,9 +302,37 @@ namespace SmoldotSharp
                     {
                         throw new NotImplementedException();
                     }
-                    return new OnBloadcastedMsg(ctx, chainId, subscId);
+                    return (true, new OnBloadcastedMsg(ctx, chainId, subscId));
                 case "transaction_unstable_watchEvent":
-                    return HandleTransactionSubscription(chainId, result, ctx, subscId);
+                    return (true, HandleTransactionSubscription(chainId, result, ctx, subscId));
+                case "chainHead_unstable_followEvent":
+                    HandleFollowSubscription(chainId, result, ctx, subscId);
+                    return (false, new InternalSubscriptionMsg());
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        void HandleFollowSubscription(int chainId, JObject result,
+            uint ctxId, string subscId)
+        {
+            switch (result["event"]?.ToString())
+            {
+                case "initialized":
+                    break;
+                case "newBlock":
+                    break;
+                case "bestBlockChanged":
+                    break;
+                case "finalized":
+                    //smoldot stop emitting the events in a few minutes.
+                    break;
+                case "stop":
+                    logger.Log(SmoldotLogLevel.Warn,
+                        $"Subscription id {subscId} : chain {chainId} is stopped.");
+                    Debug.Assert(subscriptionTable.ContainsKey((chainId, subscId)));
+                    ContextId.End(ctxId);
+                    break;
                 default:
                     throw new NotImplementedException();
             }

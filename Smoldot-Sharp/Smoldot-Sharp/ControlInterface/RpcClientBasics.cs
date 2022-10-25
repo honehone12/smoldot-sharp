@@ -5,7 +5,7 @@ using SmoldotSharp.JsonRpc;
 
 namespace SmoldotSharp
 {
-    using RpcResponseCallback = Func<int, string, BoxedObject>;
+    using RpcResponseCallback = Func<int, string, BoxedObject?>;
 
     public class RpcClientBasics
     {
@@ -59,7 +59,7 @@ namespace SmoldotSharp
             return (false, res);
         }
 
-        protected (uint, BoxedObject) HandleResult(int chainId, ResponseFormat res, string json)
+        protected (uint, BoxedObject?) HandleResult(int chainId, ResponseFormat res, string json)
         {
             Debug.Assert(requestSet.Contains(res.id));
             requestSet.Remove(res.id);

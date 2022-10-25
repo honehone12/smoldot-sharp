@@ -20,19 +20,23 @@ namespace SmoldotSharp
     {
         public abstract string ToRequestJson(uint reqId);
 
-        public abstract Func<int, string, BoxedObject> Callback { get; }
+        public abstract Func<int, string, BoxedObject?> Callback { get; }
     }
 
     public class Rpc<TResult> : Rpc
     {
         public readonly string methodName;
 
-        public override Func<int, string, BoxedObject> Callback => (i, json) =>
+        public override Func<int, string, BoxedObject?> Callback => (i, json) =>
         {
             var res = json.Deserialize<ResultFormat<TResult>>();
             Debug.Assert(res != null);
             var result = res.result;
-            Debug.Assert(!(result is null));
+            if (result == null)
+            {
+                return null;
+            }
+
             return new BoxedObject(result);
         };
 
